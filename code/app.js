@@ -45,3 +45,41 @@ menu_item.forEach((item) => {
         mobile_menu.classList.toggle('active');
     });
 });
+
+// Touch improvements for mobile menu
+document.querySelectorAll('#header .nav-list ul a').forEach(item => {
+    item.style.minHeight = '44px';
+    item.style.minWidth = '44px';
+    item.style.display = 'flex';
+    item.style.alignItems = 'center';
+    item.style.justifyContent = 'center';
+});
+// Back to top button functionality
+const backToTopButton = document.querySelector('.back-to-top');
+
+window.addEventListener('scroll', () => {
+  const scrollPosition = window.scrollY;
+  
+  // Show/hide back to top button
+  if (scrollPosition > 300) {
+    backToTopButton.classList.add('active');
+  } else {
+    backToTopButton.classList.remove('active');
+  }
+  
+  // Adjust button positions to prevent overlap
+  if (window.innerWidth <= 767) {
+    // Mobile layout
+    backToTopButton.style.bottom = '90px';
+  } else {
+    // Desktop layout
+    backToTopButton.style.bottom = '120px';
+  }
+});
+
+backToTopButton.addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  vibrate();
+});
+
+
