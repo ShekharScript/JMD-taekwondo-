@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Championship Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+            padding: 3rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .title {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6, #06b6d4);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            position: relative;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(30, 41, 59, 0.9));
+            border-radius: 1rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(51, 65, 85, 0.3);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), transparent, rgba(59, 130, 246, 0.1));
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card-header {
+            position: relative;
+            z-index: 10;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .event-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .icon {
+            width: 1rem;
+            height: 1rem;
+            color: #3b82f6;
+        }
+
+        .card-content {
+            position: relative;
+            z-index: 10;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .image-container {
+            position: relative;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transition: all 0.5s ease;
+        }
+
+        .card:hover .image-container {
+            box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.2);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .card:hover .card-image {
+            transform: scale(1.05);
+        }
+
+        .image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.2), transparent);
+        }
+
+        .medals-section {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .medal-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .gold {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #92400e;
+        }
+
+        .silver {
+            background: linear-gradient(135deg, #e5e7eb, #d1d5db);
+            color: #374151;
+        }
+
+        .bronze {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            color: #fff;
+        }
+
+        .medal-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+
+        .medal-count {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .achievement-card {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            color: white;
+            text-align: center;
+        }
+
+        .conversion-rate {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .conversion-label {
+            font-size: 0.875rem;
+            opacity: 0.9;
+            margin-bottom: 0.75rem;
+        }
+
+        .achievement-text {
+            font-size: 0.875rem;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card-content {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .event-details {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Championship Gallery</h1>
+            <p class="subtitle">Celebrating our outstanding achievements in Taekwondo competitions across the region</p>
+        </div>
+
+        <div class="grid" id="championship-grid">
+            <!-- Cards will be generated by JavaScript -->
+        </div>
+    </div>
+
+    
+    <script>
+        const championshipData = [
+            {
+                title: "35th Delhi State Taekwondo ITF Championship - 2024",
+                date: "March 15-17, 2024",
+                venue: "Indira Gandhi Indoor Stadium",
+                organizer: "Delhi Taekwondo ITF Association",
+                participants: 24,
+                medals: { gold: 8, silver: 6, bronze: 4 },
+                achievement: "Outstanding performance with 75% medal conversion rate, establishing our club as the leading Taekwondo academy in Delhi region.",
+                imageUrl: "/lovable-uploads/0758bf5d-387d-4ce5-9b32-5d29f545053b.png"
+            },
+            {
+                title: "National Taekwondo Championship - 2024",
+                date: "April 22-24, 2024",
+                venue: "Jawaharlal Nehru Stadium",
+                organizer: "Taekwondo Federation of India",
+                participants: 18,
+                medals: { gold: 5, silver: 8, bronze: 3 },
+                achievement: "Exceptional showing at national level with 89% medal conversion rate, proving our athletes' competitive edge on the biggest stage.",
+                imageUrl: "/lovable-uploads/0758bf5d-387d-4ce5-9b32-5d29f545053b.png"
+            },
+            {
+                title: "Inter-State Taekwondo Tournament - 2024",
+                date: "February 10-12, 2024",
+                venue: "KD Jadhav Indoor Hall",
+                organizer: "North Zone Taekwondo Association",
+                participants: 20,
+                medals: { gold: 6, silver: 4, bronze: 6 },
+                achievement: "Dominating performance with 80% medal conversion rate, showcasing consistent excellence across all weight categories.",
+                imageUrl: "/lovable-uploads/0758bf5d-387d-4ce5-9b32-5d29f545053b.png"
+            },
+            {
+                title: "Youth Taekwondo Open Championship - 2024",
+                date: "January 18-20, 2024",
+                venue: "Major Dhyan Chand Stadium",
+                organizer: "Delhi Youth Sports Association",
+                participants: 15,
+                medals: { gold: 4, silver: 5, bronze: 4 },
+                achievement: "Strong youth development results with 87% medal conversion rate, highlighting our effective training programs for upcoming talent.",
+                imageUrl: "/lovable-uploads/0758bf5d-387d-4ce5-9b32-5d29f545053b.png"
+            }
+        ];
+
+        function createChampionshipCard(data) {
+            const totalMedals = data.medals.gold + data.medals.silver + data.medals.bronze;
+            const conversionRate = Math.round((totalMedals / data.participants) * 100);
+
+            return `
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">${data.title}</h3>
+                        <div class="event-details">
+                            <div class="detail-item">
+                                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                </svg>
+                                <span>${data.date}</span>
+                            </div>
+                            <div class="detail-item">
+                                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                <span>${data.venue}</span>
+                            </div>
+                            <div class="detail-item">
+                                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                                </svg>
+                                <span>${data.organizer}</span>
+                            </div>
+                            <div class="detail-item">
+                                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                                </svg>
+                                <span>${data.participants} participants from our club</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-content">
+                        <div class="image-container">
+                            <img src="${data.imageUrl}" alt="Championship Achievement" class="card-image">
+                            <div class="image-overlay"></div>
+                        </div>
+
+                        <div class="medals-section">
+                            <div class="medal-item gold">
+                                <div class="medal-info">
+                                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                                    </svg>
+                                    <span>Gold</span>
+                                </div>
+                                <span class="medal-count">${data.medals.gold}</span>
+                            </div>
+
+                            <div class="medal-item silver">
+                                <div class="medal-info">
+                                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <circle cx="12" cy="12" r="6"></circle>
+                                    </svg>
+                                    <span>Silver</span>
+                                </div>
+                                <span class="medal-count">${data.medals.silver}</span>
+                            </div>
+
+                            <div class="medal-item bronze">
+                                <div class="medal-info">
+                                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"></path>
+                                    </svg>
+                                    <span>Bronze</span>
+                                </div>
+                                <span class="medal-count">${data.medals.bronze}</span>
+                            </div>
+
+                            <div class="achievement-card">
+                                <div class="conversion-rate">${conversionRate}%</div>
+                                <div class="conversion-label">Medal Conversion Rate</div>
+                                <p class="achievement-text">${data.achievement}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderChampionshipCards() {
+            const grid = document.getElementById('championship-grid');
+            grid.innerHTML = championshipData.map(createChampionshipCard).join('');
+        }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', renderChampionshipCards);
+    </script>
+</body>
+</html>
